@@ -16,8 +16,6 @@ from utils import admin_required
 
 admin_bp = Blueprint('admin', __name__)
 
-# Note: This blueprint is registered with url_prefix='/admin'.
-
 
 # ── Dashboard ───────────────────────────────────────────────────────
 
