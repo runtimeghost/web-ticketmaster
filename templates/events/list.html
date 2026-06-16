@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Events — Ticket Master{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>All Events</h1>
+        <p>Discover and book tickets for upcoming events</p>
+    </div>
+
+    <div class="event-grid">
+        {% for event in events %}
+        <div class="event-card animate-on-scroll">
+            <div class="event-image"
+                 style="background:
+                    {% if event.image_url %}
+                        url('{{ event.image_url }}') center/cover no-repeat
+                    {% elif loop.index % 5 == 1 %}
+                        linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+                    {% elif loop.index % 5 == 2 %}
+                        linear-gradient(135deg, #f093fb 0%, #f5576c 100%)
+                    {% elif loop.index % 5 == 3 %}
+                        linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)
+                    {% elif loop.index % 5 == 4 %}
+                        linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)
+                    {% else %}
+                        linear-gradient(135deg, #fa709a 0%, #fee140 100%)
+                    {% endif %};">
+            </div>
+            <div class="event-info">
+                <h3 class="event-title">{{ event.title }}</h3>
+                <p class="event-meta">📅 {{ event.event_date.strftime('%B %d, %Y') }} · 🕐 {{ event.event_time.strftime('%I:%M %p') }}</p>
+                <p class="event-meta">📍 {{ event.venue }}</p>
+                <div class="event-footer">
+                    <span class="event-price">From ৳{{ "%.2f"|format([event.vip_price, event.normal_price, event.student_price]|select('gt', 0)|min) }}</span>
+                    {% set total_available = event.vip_available + event.normal_available + event.student_available %}
+                    {% if total_available > 10 %}
+                        <span class="event-badge badge-success">{{ total_available }} seats left</span>
+                    {% elif total_available > 0 %}
+                        <span class="event-badge badge-warning">Few left — {{ total_available }} seats</span>
+                    {% else %}
+                        <span class="event-badge badge-danger">Sold Out</span>
+                    {% endif %}
+                </div>
+                <a href="{{ url_for('events.event_detail', event_id=event.id) }}" class="btn btn-primary">Book Now →</a>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if not events %}
+        <div class="empty-state">
+            <p>📭 No events found. Stay tuned for upcoming listings!</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Resale Requests — Ticket Master{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>🔄 Resale Requests</h1>
+        <p>Review and approve user resale listings.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body" style="padding: 0;">
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Ticket Code</th>
+                            <th>Event</th>
+                            <th>Seller</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for req in requests %}
+                        <tr>
+                            <td style="font-family: monospace;">{{ req.ticket_code[:12] }}...</td>
+                            <td>{{ req.event_title }}</td>
+                            <td>{{ req.seller_username }}</td>
+                            <td>৳{{ "%.2f"|format(req.price) }}</td>
+                            <td>
+                                {% set status_class = 'badge-pending' if req.status == 'pending' else ('badge-success' if req.status in ('approved', 'sold') else 'badge-danger') %}
+                                <span class="badge {{ status_class }}">{{ req.status|capitalize }}</span>
+                            </td>
+                            <td>{{ req.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                {% if req.status == 'pending' %}
+                                <form style="display:inline" action="{{ url_for('admin.approve_resale', resale_id=req.id) }}" method="POST">
+                                    <button class="btn btn-sm btn-success" type="submit">✓ Approve</button>
+                                </form>
+                                <form style="display:inline" action="{{ url_for('admin.reject_resale', resale_id=req.id) }}" method="POST">
+                                    <button class="btn btn-sm btn-danger" type="submit">✗ Reject</button>
+                                </form>
+                                {% else %}
+                                <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        
+                        {% if not requests %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted" style="padding: 3rem;">No resale requests</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

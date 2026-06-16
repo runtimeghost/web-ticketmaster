@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Checkout — Ticket Master{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Complete Your Booking</h1>
+        <p>You have 5 minutes to complete the mock payment.</p>
+    </div>
+
+    <div class="checkout-layout">
+        <!-- Left column -->
+        <div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h3>Order Summary</h3>
+                    <p><strong>Event:</strong> {{ event.title }}</p>
+                    <p><strong>Date:</strong> {{ event.event_date.strftime('%B %d, %Y') }}</p>
+                    <p><strong>Venue:</strong> {{ event.venue }}</p>
+                    <p><strong>Tickets:</strong> 
+                        {% if lock.vip_qty > 0 %} {{ lock.vip_qty }}x VIP {% endif %}
+                        {% if lock.normal_qty > 0 %} {{ lock.normal_qty }}x Normal {% endif %}
+                        {% if lock.student_qty > 0 %} {{ lock.student_qty }}x Student {% endif %}
+                    </p>
+                    <p class="total-price mt-2" style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">Total: ৳{{ "%.2f"|format(total_price) }}</p>
+                </div>
+            </div>
+
+            <div class="countdown-container" id="checkout-countdown" data-remaining-seconds="{{ lock.remaining_seconds }}" data-cancel-url="{{ url_for('booking.cancel', lock_id=lock.id) }}">
+                <h3>⏳ Time Remaining</h3>
+                <div class="countdown-timer">
+                    <span id="countdown-minutes" class="countdown-digits">05</span>
+                    <span class="countdown-separator">:</span>
+                    <span id="countdown-seconds" class="countdown-digits">00</span>
+                </div>
+                <p class="countdown-label">Complete payment before time runs out!</p>
+                <div class="countdown-progress"></div>
+            </div>
+        </div>
+
+        <!-- Right column -->
+        <div>
+            <div class="card">
+                <div class="card-body">
+                    <h3>Payment Details</h3>
+                    <p class="text-muted mb-3">This is a mock payment — no real charges</p>
+                    
+                    <form action="{{ url_for('booking.pay', lock_id=lock.id) }}" method="POST" onsubmit="document.getElementById('pay-btn').disabled=true; document.getElementById('pay-btn').innerText='Processing...';">
+                        <div class="form-group">
+                            <label class="form-label">Cardholder Name</label>
+                            <input type="text" class="form-input" name="cardholder_name" required value="{{ session.get('username', '') }}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Card Number</label>
+                            <input type="text" class="form-input" name="card_number" placeholder="4242 4242 4242 4242" required maxlength="19">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Expiry</label>
+                                <input type="text" class="form-input" name="card_expiry" placeholder="MM/YY" required maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">CVV</label>
+                                <input type="text" class="form-input" name="card_cvv" placeholder="123" required maxlength="4">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" id="pay-btn" class="btn btn-primary btn-lg" style="width: 100%;">💳 Pay ৳{{ "%.2f"|format(total_price) }}</button>
+                    </form>
+                    
+                    <form action="{{ url_for('booking.cancel', lock_id=lock.id) }}" method="POST" style="margin-top: 8px;">
+                        <button type="submit" class="btn btn-danger" style="width: 100%;">Cancel Booking</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ event.title }} — Ticket Master{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <!-- Event Banner -->
+        <div class="event-detail-header"
+             style="background:
+                {% if event.image_url %}
+                    linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.7)), url('{{ event.image_url }}') center/cover no-repeat
+                {% else %}
+                    linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+                {% endif %};">
+            <h1 class="event-detail-title">{{ event.title }}</h1>
+        </div>
+
+        <div class="card-body">
+            <h1>{{ event.title }}</h1>
+
+            <!-- Event Metadata Grid -->
+            <div class="event-detail-meta" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <div class="meta-item">
+                    <span class="meta-icon">📅</span>
+                    <div>
+                        <span class="meta-label">Date</span>
+                        <span class="meta-value">{{ event.event_date.strftime('%B %d, %Y') }}</span>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-icon">🕐</span>
+                    <div>
+                        <span class="meta-label">Time</span>
+                        <span class="meta-value">{{ event.event_time.strftime('%I:%M %p') }}</span>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-icon">📍</span>
+                    <div>
+                        <span class="meta-label">Venue</span>
+                        <span class="meta-value">{{ event.venue }}</span>
+                    </div>
+                </div>
+                
+                <div class="meta-item" style="grid-column: 1 / -1; margin-top: 1rem; margin-bottom: -0.5rem;">
+                    <span class="meta-label" style="font-size: 1.1rem; color: var(--text-primary);">Ticket Options</span>
+                </div>
+                
+                <!-- VIP -->
+                <div class="meta-item">
+                    <span class="meta-icon" style="background: rgba(255, 215, 0, 0.1); color: #ffd700;">⭐</span>
+                    <div>
+                        <span class="meta-label">VIP Tickets</span>
+                        <span class="meta-value">{{ event.vip_available }} left • ৳{{ "%.2f"|format(event.vip_price) }}</span>
+                    </div>
+                </div>
+                
+                <!-- Normal -->
+                <div class="meta-item">
+                    <span class="meta-icon">🎟️</span>
+                    <div>
+                        <span class="meta-label">Normal Tickets</span>
+                        <span class="meta-value">{{ event.normal_available }} left • ৳{{ "%.2f"|format(event.normal_price) }}</span>
+                    </div>
+                </div>
+                
+                <!-- Student -->
+                <div class="meta-item">
+                    <span class="meta-icon" style="background: rgba(102, 126, 234, 0.1); color: #667eea;">🎓</span>
+                    <div>
+                        <span class="meta-label">Student Tickets</span>
+                        <span class="meta-value">{{ event.student_available }} left • ৳{{ "%.2f"|format(event.student_price) }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Description -->
+            {% if event.description %}
+            <div class="event-description">
+                <h3>About This Event</h3>
+                <p>{{ event.description }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Booking Section -->
+            {% set any_available = (event.vip_available > 0) or (event.normal_available > 0) or (event.student_available > 0) %}
+            
+            {% if session.get('user_id') and any_available %}
+            <hr>
+            <h3>🎫 Select Tickets</h3>
+            <form action="{{ url_for('booking.lock_seats', event_id=event.id) }}" method="POST">
+                
+                <div class="ticket-selection-grid" style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+                    
+                    <!-- VIP Row -->
+                    {% if event.vip_available > 0 %}
+                    <div class="card" style="padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4 style="margin:0;">⭐ VIP</h4>
+                            <span class="text-muted">৳{{ "%.2f"|format(event.vip_price) }}</span>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <input type="number" name="vip_qty" value="0" min="0" max="{{ event.vip_available }}" class="form-input" style="width: 80px;" oninput="updateTotal()">
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Normal Row -->
+                    {% if event.normal_available > 0 %}
+                    <div class="card" style="padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4 style="margin:0;">🎟️ Normal</h4>
+                            <span class="text-muted">৳{{ "%.2f"|format(event.normal_price) }}</span>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <input type="number" name="normal_qty" value="0" min="0" max="{{ event.normal_available }}" class="form-input" style="width: 80px;" oninput="updateTotal()">
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Student Row -->
+                    {% if event.student_available > 0 %}
+                    <div class="card" style="padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4 style="margin:0;">🎓 Student</h4>
+                            <span class="text-muted">৳{{ "%.2f"|format(event.student_price) }}</span>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <input type="number" name="student_qty" value="0" min="0" max="{{ event.student_available }}" class="form-input" style="width: 80px;" oninput="updateTotal()">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="price-summary">
+                    <p>Total: <strong>৳<span id="multi-total-price-display">0.00</span></strong></p>
+                </div>
+                <button class="btn btn-primary btn-lg" type="submit" id="checkout-btn" disabled>🎫 Proceed to Checkout</button>
+            </form>
+
+            <script>
+                function updateTotal() {
+                    const vipQty = parseInt(document.querySelector('input[name="vip_qty"]')?.value || 0);
+                    const normalQty = parseInt(document.querySelector('input[name="normal_qty"]')?.value || 0);
+                    const studentQty = parseInt(document.querySelector('input[name="student_qty"]')?.value || 0);
+                    
+                    const vipPrice = {{ event.vip_price }};
+                    const normalPrice = {{ event.normal_price }};
+                    const studentPrice = {{ event.student_price }};
+                    
+                    const total = (vipQty * vipPrice) + (normalQty * normalPrice) + (studentQty * studentPrice);
+                    document.getElementById('multi-total-price-display').innerText = total.toFixed(2);
+                    
+                    const btn = document.getElementById('checkout-btn');
+                    if (vipQty + normalQty + studentQty > 0) {
+                        btn.removeAttribute('disabled');
+                    } else {
+                        btn.setAttribute('disabled', 'true');
+                    }
+                }
+            </script>
+
+            {% elif not session.get('user_id') %}
+            <div class="auth-prompt card">
+                <div class="card-body" style="text-align: center;">
+                    <p>🔒 Please log in to book tickets for this event.</p>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Log In to Book</a>
+                </div>
+            </div>
+
+            {% else %}
+            <div style="margin-top: 2rem; text-align: center;">
+                <span class="badge badge-danger" style="font-size: 1.2rem; padding: 0.75rem 1.5rem;">Sold Out</span>
+                <p style="margin-top: 0.75rem; color: var(--text-secondary);">All tickets for this event have been sold. Check the <a href="{{ url_for('resale.marketplace') }}">Resale Marketplace</a> for availability.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Event — Ticket Master{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>🎪 Create New Event</h1>
+        <p>Fill in the details below to publish a new event</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form action="{{ url_for('admin.create_event') }}" method="POST">
+                <div class="form-group">
+                    <label for="event-title">Event Title</label>
+                    <input type="text" id="event-title" name="title" required placeholder="e.g. Spring Music Festival 2025">
+                </div>
+
+                <div class="form-group">
+                    <label for="event-description">Description</label>
+                    <textarea id="event-description" name="description" rows="4" placeholder="Describe your event — what attendees can expect, lineup, highlights..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="event-venue">Venue</label>
+                        <input type="text" id="event-venue" name="venue" required placeholder="e.g. Central Auditorium">
+                    </div>
+                    <div class="form-group">
+                        <label for="event-image-url">Image URL (optional)</label>
+                        <input type="url" id="event-image-url" name="image_url" placeholder="https://example.com/event-banner.jpg">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="event-date">Event Date</label>
+                        <input type="date" id="event-date" name="event_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-time">Event Time</label>
+                        <input type="time" id="event-time" name="event_time" required>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">Ticket Pricing & Capacities</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="vip-seats">VIP Seats</label>
+                        <input type="number" id="vip-seats" name="vip_seats" min="0" required value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="vip-price">VIP Price (৳)</label>
+                        <input type="number" id="vip-price" name="vip_price" step="0.01" min="0" required value="0.00">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="normal-seats">Normal Seats</label>
+                        <input type="number" id="normal-seats" name="normal_seats" min="0" required value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="normal-price">Normal Price (৳)</label>
+                        <input type="number" id="normal-price" name="normal_price" step="0.01" min="0" required value="0.00">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="student-seats">Student Seats</label>
+                        <input type="number" id="student-seats" name="student_seats" min="0" required value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="student-price">Student Price (৳)</label>
+                        <input type="number" id="student-price" name="student_price" step="0.01" min="0" required value="0.00">
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-lg" type="submit">🚀 Create Event</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

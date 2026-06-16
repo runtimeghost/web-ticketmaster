@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}My Bookings — Ticket Master{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>My Bookings</h1>
+        <p>View your past and current event tickets.</p>
+    </div>
+
+    {% for booking in bookings %}
+    <div class="card booking-card animate-on-scroll mb-4">
+        <div class="card-header flex-between">
+            <h3>{{ booking.event_title }}</h3>
+            {% set status_class = 'badge-success' if booking.status == 'confirmed' else ('badge-danger' if booking.status == 'cancelled' else 'badge-warning') %}
+            <span class="badge {{ status_class }}">{{ booking.status|capitalize }}</span>
+        </div>
+        <div class="card-body">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                <div><strong>📅 Date:</strong> {{ booking.event_date.strftime('%B %d, %Y') }}</div>
+                <div><strong>📍 Venue:</strong> {{ booking.event_venue }}</div>
+                <div><strong>🎫 Tickets:</strong> {{ booking.vip_qty + booking.normal_qty + booking.student_qty }}</div>
+                <div><strong>💰 Total:</strong> ৳{{ "%.2f"|format(booking.total_price) }}</div>
+                <div><strong>📆 Booked:</strong> {{ booking.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+            </div>
+
+            {% if booking.status == 'confirmed' and booking.tickets %}
+            <h4 class="mb-2">Your Tickets</h4>
+            <div class="tickets-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                {% for ticket in booking.tickets %}
+                <div class="ticket-item flex-between" style="padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    <span>🎫 {{ ticket.ticket_code[:8] }}... (Seat: {{ ticket.seat_label }} | <span style="font-weight:bold;">{{ ticket.ticket_type }}</span>)</span>
+                    <div class="flex gap-1">
+                        <a href="{{ url_for('booking.view_ticket', ticket_code=ticket.ticket_code) }}" class="btn btn-sm btn-secondary">View Ticket</a>
+                        <form action="{{ url_for('resale.create') }}" method="POST" style="display: inline;">
+                            <input type="hidden" name="ticket_code" value="{{ ticket.ticket_code }}">
+                            <button type="submit" class="btn btn-sm btn-outline">Resell</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if not bookings %}
+    <div class="empty-state">
+        <h2>No bookings yet.</h2>
+        <p>Browse our exciting events to get started!</p>
+        <a href="{{ url_for('events.list_events') }}" class="btn btn-primary mt-2">Browse Events</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

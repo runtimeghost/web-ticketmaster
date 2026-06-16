@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Ticket — {{ ticket.ticket_code[:8] }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="ticket-container">
+        <div class="ticket-header">
+            <div class="ticket-brand">🎫 Ticket Master</div>
+            <h2>{{ ticket.event_title }}</h2>
+        </div>
+        <div class="ticket-body">
+            <div class="ticket-details">
+                <div>
+                    <div class="text-muted">📅 Date</div>
+                    <strong>{{ ticket.event_date.strftime('%B %d, %Y') }}</strong>
+                </div>
+                <div>
+                    <div class="text-muted">🕐 Time</div>
+                    <strong>{{ ticket.event_time.strftime('%I:%M %p') }}</strong>
+                </div>
+                <div>
+                    <div class="text-muted">📍 Venue</div>
+                    <strong>{{ ticket.event_venue }}</strong>
+                </div>
+                <div>
+                    <div class="text-muted">💺 Seat</div>
+                    <strong>{{ ticket.seat_label }}</strong>
+                </div>
+                <div>
+                    <div class="text-muted">🎟️ Type</div>
+                    <strong>{{ ticket.ticket_type }}</strong>
+                </div>
+                <div>
+                    <div class="text-muted">👤 Holder</div>
+                    <strong>{{ ticket.holder_name }}</strong>
+                </div>
+            </div>
+            
+            <div class="ticket-divider"></div>
+            
+            <div class="ticket-code-section">
+                <p class="text-muted">Ticket Code</p>
+                <p class="ticket-code">{{ ticket.ticket_code }}</p>
+            </div>
+        </div>
+        <div class="ticket-footer">
+            <p>Present this ticket at the venue entrance</p>
+            <p class="text-muted mt-1">Booking #{{ ticket.booking_id }}</p>
+        </div>
+    </div>
+
+    <div class="text-center mt-4 no-print flex-center gap-2">
+        <a href="{{ url_for('booking.booking_history') }}" class="btn btn-secondary">← Back to Bookings</a>
+        <button id="print-ticket-btn" class="btn btn-primary btn-lg">🖨️ Print Ticket</button>
+    </div>
+</div>
+{% endblock %}

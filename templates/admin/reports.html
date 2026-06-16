@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Sales Reports — Ticket Master{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>📈 Sales Reports</h1>
+        <p>Revenue analysis across all events.</p>
+    </div>
+
+    <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+        <div class="stat-card" style="border-left-color: var(--success);">
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-value" style="color: var(--success);">৳{{ "%.2f"|format(total_revenue or 0) }}</div>
+        </div>
+        <div class="stat-card" style="border-left-color: var(--info);">
+            <div class="stat-label">Total Tickets Sold</div>
+            <div class="stat-value" style="color: var(--info);">{{ total_tickets or 0 }}</div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h3>Revenue by Event</h3>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Total Seats</th>
+                            <th>Tickets Sold</th>
+                            <th>Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in reports %}
+                        <tr>
+                            <td><strong>{{ r.event_title }}</strong></td>
+                            <td>{{ r.event_date.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ r.total_seats }}</td>
+                            <td>{{ r.tickets_sold or 0 }}</td>
+                            <td>৳{{ "%.2f"|format(r.revenue or 0) }}</td>
+                        </tr>
+                        {% endfor %}
+                        
+                        {% if not reports %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted" style="padding: 2rem;">No sales data yet</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

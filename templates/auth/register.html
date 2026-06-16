@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Register — Ticket Master{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card card">
+        <div class="card-header">
+            <h2 class="auth-title">Create Account</h2>
+            <p class="auth-subtitle">Join us to book amazing events and never miss out</p>
+        </div>
+        <div class="card-body">
+            <form action="{{ url_for('auth.register') }}" method="POST">
+                <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" name="username" required placeholder="Choose a username" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" name="email" required placeholder="Enter your email address" autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" name="password" required placeholder="Create a strong password" autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm-password">Confirm Password</label>
+                    <input type="password" id="register-confirm-password" name="confirm_password" required placeholder="Re-enter your password" autocomplete="new-password">
+                </div>
+                <button class="btn btn-primary btn-lg" type="submit" style="width: 100%;">Create Account</button>
+            </form>
+        </div>
+        <div class="card-footer auth-footer">
+            <p>Already have an account? <a href="{{ url_for('auth.login') }}">Log in here</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

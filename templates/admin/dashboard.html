@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard — Ticket Master{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>📊 Admin Dashboard</h1>
+        <p>Overview of system metrics and recent activities.</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">🎪</div>
+            <div class="stat-value">{{ stats.event_count }}</div>
+            <div class="stat-label">Total Events</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-value">৳{{ "%.2f"|format(stats.total_revenue or 0) }}</div>
+            <div class="stat-label">Total Revenue</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🎫</div>
+            <div class="stat-value">{{ stats.total_tickets_sold or 0 }}</div>
+            <div class="stat-label">Tickets Sold</div>
+        </div>
+        <div class="stat-card" style="border-left-color: var(--warning);">
+            <div class="stat-icon">🔄</div>
+            <div class="stat-value">{{ stats.pending_resales or 0 }}</div>
+            <div class="stat-label">Pending Resales</div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h3>Recent Bookings</h3>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Event</th>
+                            <th>Qty</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in recent_bookings %}
+                        <tr>
+                            <td>{{ b.username }}</td>
+                            <td>{{ b.event_title }}</td>
+                            <td>{{ b.quantity }}</td>
+                            <td>৳{{ "%.2f"|format(b.total_price) }}</td>
+                            <td>
+                                {% set status_class = 'badge-success' if b.status == 'confirmed' else ('badge-danger' if b.status == 'cancelled' else 'badge-warning') %}
+                                <span class="badge {{ status_class }}">{{ b.status|capitalize }}</span>
+                            </td>
+                            <td>{{ b.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        </tr>
+                        {% endfor %}
+                        
+                        {% if not recent_bookings %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted" style="padding: 2rem;">No bookings yet</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
