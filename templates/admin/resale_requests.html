@@ -29,7 +29,7 @@
                             <td style="font-family: monospace;">{{ req.ticket_code[:12] }}...</td>
                             <td>{{ req.event_title }}</td>
                             <td>{{ req.seller_username }}</td>
-                            <td>৳{{ "%.2f"|format(req.price) }}</td>
+                            <td>${{ "%.2f"|format(req.price) }}</td>
                             <td>
                                 {% set status_class = 'badge-pending' if req.status == 'pending' else ('badge-success' if req.status in ('approved', 'sold') else 'badge-danger') %}
                                 <span class="badge {{ status_class }}">{{ req.status|capitalize }}</span>

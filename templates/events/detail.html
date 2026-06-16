@@ -52,7 +52,7 @@
                     <span class="meta-icon" style="background: rgba(255, 215, 0, 0.1); color: #ffd700;">⭐</span>
                     <div>
                         <span class="meta-label">VIP Tickets</span>
-                        <span class="meta-value">{{ event.vip_available }} left • ৳{{ "%.2f"|format(event.vip_price) }}</span>
+                        <span class="meta-value">{{ event.vip_available }} left • ${{ "%.2f"|format(event.vip_price) }}</span>
                     </div>
                 </div>
                 
@@ -61,7 +61,7 @@
                     <span class="meta-icon">🎟️</span>
                     <div>
                         <span class="meta-label">Normal Tickets</span>
-                        <span class="meta-value">{{ event.normal_available }} left • ৳{{ "%.2f"|format(event.normal_price) }}</span>
+                        <span class="meta-value">{{ event.normal_available }} left • ${{ "%.2f"|format(event.normal_price) }}</span>
                     </div>
                 </div>
                 
@@ -70,7 +70,7 @@
                     <span class="meta-icon" style="background: rgba(102, 126, 234, 0.1); color: #667eea;">🎓</span>
                     <div>
                         <span class="meta-label">Student Tickets</span>
-                        <span class="meta-value">{{ event.student_available }} left • ৳{{ "%.2f"|format(event.student_price) }}</span>
+                        <span class="meta-value">{{ event.student_available }} left • ${{ "%.2f"|format(event.student_price) }}</span>
                     </div>
                 </div>
             </div>
@@ -84,9 +84,17 @@
             {% endif %}
 
             <!-- Booking Section -->
+            {% set is_past = (event.event_date < now().date()) or (event.event_date == now().date() and event.event_time < now().time()) %}
             {% set any_available = (event.vip_available > 0) or (event.normal_available > 0) or (event.student_available > 0) %}
             
-            {% if session.get('user_id') and any_available %}
+            {% if is_past %}
+            <hr>
+            <div style="margin-top: 2rem; text-align: center;">
+                <span class="badge badge-secondary" style="font-size: 1.2rem; padding: 0.75rem 1.5rem; background-color: var(--text-muted); color: white;">Event Over</span>
+                <p style="margin-top: 0.75rem; color: var(--text-secondary);">This event has already taken place and tickets can no longer be booked.</p>
+            </div>
+
+            {% elif session.get('user_id') and any_available %}
             <hr>
             <h3>🎫 Select Tickets</h3>
             <form action="{{ url_for('booking.lock_seats', event_id=event.id) }}" method="POST">
@@ -98,7 +106,7 @@
                     <div class="card" style="padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <h4 style="margin:0;">⭐ VIP</h4>
-                            <span class="text-muted">৳{{ "%.2f"|format(event.vip_price) }}</span>
+                            <span class="text-muted">${{ "%.2f"|format(event.vip_price) }}</span>
                         </div>
                         <div class="form-group" style="margin:0;">
                             <input type="number" name="vip_qty" value="0" min="0" max="{{ event.vip_available }}" class="form-input" style="width: 80px;" oninput="updateTotal()">
@@ -111,7 +119,7 @@
                     <div class="card" style="padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <h4 style="margin:0;">🎟️ Normal</h4>
-                            <span class="text-muted">৳{{ "%.2f"|format(event.normal_price) }}</span>
+                            <span class="text-muted">${{ "%.2f"|format(event.normal_price) }}</span>
                         </div>
                         <div class="form-group" style="margin:0;">
                             <input type="number" name="normal_qty" value="0" min="0" max="{{ event.normal_available }}" class="form-input" style="width: 80px;" oninput="updateTotal()">
@@ -124,7 +132,7 @@
                     <div class="card" style="padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <h4 style="margin:0;">🎓 Student</h4>
-                            <span class="text-muted">৳{{ "%.2f"|format(event.student_price) }}</span>
+                            <span class="text-muted">${{ "%.2f"|format(event.student_price) }}</span>
                         </div>
                         <div class="form-group" style="margin:0;">
                             <input type="number" name="student_qty" value="0" min="0" max="{{ event.student_available }}" class="form-input" style="width: 80px;" oninput="updateTotal()">
@@ -134,7 +142,7 @@
                 </div>
 
                 <div class="price-summary">
-                    <p>Total: <strong>৳<span id="multi-total-price-display">0.00</span></strong></p>
+                    <p>Total: <strong>$<span id="multi-total-price-display">0.00</span></strong></p>
                 </div>
                 <button class="btn btn-primary btn-lg" type="submit" id="checkout-btn" disabled>🎫 Proceed to Checkout</button>
             </form>

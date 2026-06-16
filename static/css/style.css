@@ -53,6 +53,65 @@
     --transition-slow: 400ms ease;
 }
 
+/* ── Light Theme ────────────────────────────────────────────────── */
+[data-theme="light"] {
+    --bg-primary: #f1f5f9;
+    --bg-secondary: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --bg-card-hover: rgba(255, 255, 255, 1);
+    --bg-glass: rgba(0, 0, 0, 0.03);
+    --bg-glass-hover: rgba(0, 0, 0, 0.06);
+
+    --gradient-hero: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 50%, #e0e7ff 100%);
+
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+
+    --border-color: rgba(0, 0, 0, 0.1);
+    --border-color-hover: rgba(0, 0, 0, 0.2);
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
+}
+
+[data-theme="light"] .navbar {
+    background: rgba(241, 245, 249, 0.85);
+}
+
+[data-theme="light"] .hero-title {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .nav-toggle span {
+    background: var(--text-primary);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    margin-left: auto;
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 1.25rem;
+    padding: 0.35rem 0.6rem;
+    line-height: 1;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle:hover {
+    background: var(--bg-glass-hover);
+    border-color: var(--border-color-hover);
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&display=swap');
 
 * {
@@ -70,6 +129,7 @@ body {
     color: var(--text-primary);
     font-family: var(--font-body);
     line-height: 1.6;
+    padding: 24px;
 }
 
 h1,
@@ -106,13 +166,10 @@ a:hover {
     background: rgba(10, 14, 23, 0.8);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border-color);
-    padding: 1rem 0;
-}
-
-.navbar .container {
+    padding: 1rem 1.5rem;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 2rem;
 }
 
 .nav-brand {
@@ -794,7 +851,7 @@ textarea:focus {
     align-items: center;
     justify-content: center;
     min-height: calc(100vh - 80px - 100px);
-    padding: 2rem 0;
+    padding: 2rem 1.5rem;
 }
 
 .auth-card {

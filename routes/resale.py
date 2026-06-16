@@ -80,7 +80,7 @@ def create():
 
         conn.commit()
 
-    flash('Ticket listed for resale (at 5%% loss). Awaiting admin approval.', 'info')
+    flash('Ticket listed for resale (at 5% loss). Awaiting admin approval.', 'info')
     return redirect(url_for('booking.booking_history'))
 
 @resale_bp.route('/marketplace')

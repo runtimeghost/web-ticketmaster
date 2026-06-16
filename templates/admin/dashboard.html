@@ -16,7 +16,7 @@
         </div>
         <div class="stat-card">
             <div class="stat-icon">💰</div>
-            <div class="stat-value">৳{{ "%.2f"|format(stats.total_revenue or 0) }}</div>
+            <div class="stat-value">${{ "%.2f"|format(stats.total_revenue or 0) }}</div>
             <div class="stat-label">Total Revenue</div>
         </div>
         <div class="stat-card">
@@ -54,7 +54,7 @@
                             <td>{{ b.username }}</td>
                             <td>{{ b.event_title }}</td>
                             <td>{{ b.quantity }}</td>
-                            <td>৳{{ "%.2f"|format(b.total_price) }}</td>
+                            <td>${{ "%.2f"|format(b.total_price) }}</td>
                             <td>
                                 {% set status_class = 'badge-success' if b.status == 'confirmed' else ('badge-danger' if b.status == 'cancelled' else 'badge-warning') %}
                                 <span class="badge {{ status_class }}">{{ b.status|capitalize }}</span>

@@ -36,11 +36,17 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="event-date">Event Date</label>
-                        <input type="date" id="event-date" name="event_date" required>
+                        <div style="display: flex; gap: 0.5rem; align-items: stretch;">
+                            <input type="date" id="event-date" name="event_date" required style="flex-grow: 1;">
+                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('event-date').showPicker()" style="padding: 0 1rem;">📅</button>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="event-time">Event Time</label>
-                        <input type="time" id="event-time" name="event_time" required>
+                        <div style="display: flex; gap: 0.5rem; align-items: stretch;">
+                            <input type="time" id="event-time" name="event_time" required style="flex-grow: 1;">
+                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('event-time').showPicker()" style="padding: 0 1rem;">🕒</button>
+                        </div>
                     </div>
                 </div>
 
@@ -51,7 +57,7 @@
                         <input type="number" id="vip-seats" name="vip_seats" min="0" required value="0">
                     </div>
                     <div class="form-group">
-                        <label for="vip-price">VIP Price (৳)</label>
+                        <label for="vip-price">VIP Price ($)</label>
                         <input type="number" id="vip-price" name="vip_price" step="0.01" min="0" required value="0.00">
                     </div>
                 </div>
@@ -62,7 +68,7 @@
                         <input type="number" id="normal-seats" name="normal_seats" min="0" required value="0">
                     </div>
                     <div class="form-group">
-                        <label for="normal-price">Normal Price (৳)</label>
+                        <label for="normal-price">Normal Price ($)</label>
                         <input type="number" id="normal-price" name="normal_price" step="0.01" min="0" required value="0.00">
                     </div>
                 </div>
@@ -73,7 +79,7 @@
                         <input type="number" id="student-seats" name="student_seats" min="0" required value="0">
                     </div>
                     <div class="form-group">
-                        <label for="student-price">Student Price (৳)</label>
+                        <label for="student-price">Student Price ($)</label>
                         <input type="number" id="student-price" name="student_price" step="0.01" min="0" required value="0.00">
                     </div>
                 </div>

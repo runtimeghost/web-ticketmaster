@@ -13,6 +13,12 @@
         rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block extra_head %}{% endblock %}
+    <script>
+        (function() {
+            var t = localStorage.getItem('theme');
+            if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+        })();
+    </script>
 </head>
 
 <body>
@@ -53,6 +59,8 @@
             <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">Register</a>
             {% endif %}
         </div>
+
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark theme">🌙</button>
     </nav>
 
     <!-- ═══════════════════════════════════════════════ -->
@@ -85,6 +93,27 @@
     </footer>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        (function() {
+            var btn = document.getElementById('theme-toggle');
+            function applyIcon() {
+                var current = document.documentElement.getAttribute('data-theme');
+                btn.textContent = current === 'light' ? '☀️' : '🌙';
+            }
+            applyIcon();
+            btn.addEventListener('click', function() {
+                var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+                if (isLight) {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    localStorage.setItem('theme', 'light');
+                }
+                applyIcon();
+            });
+        })();
+    </script>
     {% block extra_scripts %}{% endblock %}
 </body>
 

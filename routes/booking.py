@@ -32,7 +32,7 @@ def lock_seats(event_id: int):
     with current_app.pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
             cur.execute(
-                "SELECT vip_available, normal_available, student_available FROM events WHERE id = %s",
+                "SELECT event_date, event_time, vip_available, normal_available, student_available FROM events WHERE id = %s",
                 (event_id,),
             )
             event = cur.fetchone()
@@ -40,6 +40,12 @@ def lock_seats(event_id: int):
             if event is None:
                 flash('Event not found.', 'error')
                 return redirect(url_for('events.list_events'))
+                
+            from datetime import datetime
+            now = datetime.now()
+            if event['event_date'] < now.date() or (event['event_date'] == now.date() and event['event_time'] < now.time()):
+                flash('This event has already taken place.', 'error')
+                return redirect(url_for('events.event_detail', event_id=event_id))
 
             if (event['vip_available'] < vip_qty or 
                 event['normal_available'] < normal_qty or 

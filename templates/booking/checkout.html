@@ -22,7 +22,7 @@
                         {% if lock.normal_qty > 0 %} {{ lock.normal_qty }}x Normal {% endif %}
                         {% if lock.student_qty > 0 %} {{ lock.student_qty }}x Student {% endif %}
                     </p>
-                    <p class="total-price mt-2" style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">Total: ৳{{ "%.2f"|format(total_price) }}</p>
+                    <p class="total-price mt-2" style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">Total: ${{ "%.2f"|format(total_price) }}</p>
                 </div>
             </div>
 
@@ -65,7 +65,7 @@
                             </div>
                         </div>
                         
-                        <button type="submit" id="pay-btn" class="btn btn-primary btn-lg" style="width: 100%;">💳 Pay ৳{{ "%.2f"|format(total_price) }}</button>
+                        <button type="submit" id="pay-btn" class="btn btn-primary btn-lg" style="width: 100%;">💳 Pay ${{ "%.2f"|format(total_price) }}</button>
                     </form>
                     
                     <form action="{{ url_for('booking.cancel', lock_id=lock.id) }}" method="POST" style="margin-top: 8px;">

@@ -20,7 +20,7 @@
                 <div><strong>📅 Date:</strong> {{ booking.event_date.strftime('%B %d, %Y') }}</div>
                 <div><strong>📍 Venue:</strong> {{ booking.event_venue }}</div>
                 <div><strong>🎫 Tickets:</strong> {{ booking.vip_qty + booking.normal_qty + booking.student_qty }}</div>
-                <div><strong>💰 Total:</strong> ৳{{ "%.2f"|format(booking.total_price) }}</div>
+                <div><strong>💰 Total:</strong> ${{ "%.2f"|format(booking.total_price) }}</div>
                 <div><strong>📆 Booked:</strong> {{ booking.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
             </div>
 

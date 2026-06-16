@@ -11,7 +11,7 @@
     <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
         <div class="stat-card" style="border-left-color: var(--success);">
             <div class="stat-label">Total Revenue</div>
-            <div class="stat-value" style="color: var(--success);">৳{{ "%.2f"|format(total_revenue or 0) }}</div>
+            <div class="stat-value" style="color: var(--success);">${{ "%.2f"|format(total_revenue or 0) }}</div>
         </div>
         <div class="stat-card" style="border-left-color: var(--info);">
             <div class="stat-label">Total Tickets Sold</div>
@@ -42,7 +42,7 @@
                             <td>{{ r.event_date.strftime('%Y-%m-%d') }}</td>
                             <td>{{ r.total_seats }}</td>
                             <td>{{ r.tickets_sold or 0 }}</td>
-                            <td>৳{{ "%.2f"|format(r.revenue or 0) }}</td>
+                            <td>${{ "%.2f"|format(r.revenue or 0) }}</td>
                         </tr>
                         {% endfor %}
                         

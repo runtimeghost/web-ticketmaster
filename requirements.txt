@@ -1,4 +1,5 @@
 flask==3.1.1
-psycopg[binary,pool]==3.2.9
+psycopg[binary,pool]
 werkzeug==3.1.3
 python-dotenv==1.0.1
+gunicorn==21.2.0

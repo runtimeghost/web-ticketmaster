@@ -33,7 +33,7 @@
                 <p class="event-meta">📅 {{ event.event_date.strftime('%B %d, %Y') }} · 🕐 {{ event.event_time.strftime('%I:%M %p') }}</p>
                 <p class="event-meta">📍 {{ event.venue }}</p>
                 <div class="event-footer">
-                    <span class="event-price">From ৳{{ "%.2f"|format([event.vip_price, event.normal_price, event.student_price]|select('gt', 0)|min) }}</span>
+                    <span class="event-price">From ${{ "%.2f"|format([event.vip_price, event.normal_price, event.student_price]|select('gt', 0)|min) }}</span>
                     {% set total_available = event.vip_available + event.normal_available + event.student_available %}
                     {% if total_available > 10 %}
                         <span class="event-badge badge-success">{{ total_available }} seats left</span>
@@ -43,7 +43,12 @@
                         <span class="event-badge badge-danger">Sold Out</span>
                     {% endif %}
                 </div>
-                <a href="{{ url_for('events.event_detail', event_id=event.id) }}" class="btn btn-primary">Book Now →</a>
+                {% set is_past = (event.event_date < now().date()) or (event.event_date == now().date() and event.event_time < now().time()) %}
+                {% if is_past %}
+                <button class="btn btn-secondary" style="width: 100%; cursor: not-allowed;" disabled>Event is Over</button>
+                {% else %}
+                <a href="{{ url_for('events.event_detail', event_id=event.id) }}" class="btn btn-primary" style="width: 100%; display: inline-block; text-align: center;">Book Now →</a>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
