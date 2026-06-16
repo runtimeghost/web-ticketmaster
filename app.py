@@ -25,10 +25,13 @@ def create_app() -> Flask:
     app.config['DATABASE_URL'] = cfg.DATABASE_URL
 
     # ── Connection pool ─────────────────────────────────────────────
+    # Use a smaller pool size to prevent exhausting Supabase's limit.
+    # Disabling prepare_threshold ensures compatibility with PgBouncer transaction mode.
     pool = ConnectionPool(
         conninfo=cfg.DATABASE_URL,
-        min_size=2,
-        max_size=10,
+        min_size=1,
+        max_size=4,
+        kwargs={"prepare_threshold": None}
     )
     app.pool = pool
 
