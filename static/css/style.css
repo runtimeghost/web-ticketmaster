@@ -130,6 +130,8 @@ body {
     font-family: var(--font-body);
     line-height: 1.6;
     padding: 24px;
+    height: 100vh;
+
 }
 
 h1,
@@ -707,6 +709,16 @@ textarea:focus {
     text-align: center;
     border-top: 1px solid var(--border-color);
     background: rgba(0, 0, 0, 0.2);
+}
+
+.footer-content {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+}
+.footer-content > p {
+    text-align: center;
 }
 
 @media print {
